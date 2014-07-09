@@ -2,6 +2,7 @@ import json
 
 from requests import Session
 from requests_oauthlib import OAuth1Session
+from oauthlib.common import unicode_type
 
 
 _PROTOCOL = 'application/vnd.physiome.pmr2.json.0'
@@ -11,21 +12,9 @@ _UA = 'pmr2.client/0.0'
 def default_headers():
     return {
         'Accept': _PROTOCOL,
+        'Content-Type': _PROTOCOL,
         'User-Agent': _UA,
-        'Content-Type': _UA,
     }
-
-
-class PMR2OAuth1Session(OAuth1Session):
-    """
-    This provides some boilerplate to the default one, like setting the
-    correct protocol (accept/content-type headers).
-    """
-
-    def __init__(self, **kw):
-        headers = kw.pop('headers', default_headers())
-        super(PMR2OAuth1Session, self).__init__(**kw)
-        self.headers.update(headers)
 
 
 class ClientBase(object):
@@ -35,6 +24,38 @@ class ClientBase(object):
 
     def _get_endpoint(self, endpoint):
         return self.endpoints.get(endpoint) % self.site
+
+
+class DemoAuthClient(ClientBase):
+
+    endpoints = {
+        'request': u'%s/OAuthRequestToken',
+        'authorize': u'%s/OAuthAuthorizeToken',
+        'access': u'%s/OAuthGetAccessToken',
+    }
+
+    def __init__(self, site, key, secret, callback='oob'):
+        self.site = site
+        self.key = key
+        self.secret = secret
+        self.session = OAuth1Session(
+            client_key=self.key,
+            client_secret=self.secret,
+            callback_uri=callback,
+        )
+
+    def fetch_request_token(self, scope=''):
+        self.session.fetch_request_token(
+            self._get_endpoint('request') + '?scope=' + scope)
+
+    def authorization_url(self):
+        return self.session.authorization_url(self._get_endpoint('authorize'))
+
+    def set_verifier(self, verifier):
+        self.session._client.client.verifier = unicode_type(verifier)
+
+    def fetch_access_token(self):
+        return self.session.fetch_access_token(self._get_endpoint('access'))
 
 
 class Client(ClientBase):
@@ -58,10 +79,12 @@ class Client(ClientBase):
     def __init__(self,
             site='https://models.physiomeproject.org',
             session=None,
+            use_default_headers=False,
         ):
         self.site = site
         if session is None:
             session = Session()
+        if use_default_headers:
             session.headers.update(default_headers())
         self.session = session
 
