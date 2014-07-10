@@ -175,10 +175,10 @@ class Cli(object):
             return
 
         if not data:
-            self.last_response = self.client.session.get(url)
+            self.state = self.client(url)
         else:
-            self.last_response = self.client.session.post(url, data=data)
-        print(self.last_response.json())
+            self.state = self.client(url, data=data)
+        print(self.client.last_response.json())
 
     def do_property(self, arg=''):
         """

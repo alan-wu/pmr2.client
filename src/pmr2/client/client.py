@@ -88,14 +88,17 @@ class Client(ClientBase):
             session.headers.update(default_headers())
         self.session = session
 
-    def __call__(self, target=None, endpoint='dashboard'):
+    def __call__(self, target=None, endpoint='dashboard', data=None):
         if target is None:
             target = self._get_endpoint(endpoint)
 
         if target is None:
             raise ValueError('unknown target or endpoint specified')
 
-        self.last_response = r = self.session.get(target)
+        if data:
+            self.last_response = r = self.session.post(target, data=data)
+        else:
+            self.last_response = r = self.session.get(target)
         return State(self, r)
 
 
@@ -117,8 +120,7 @@ class State(object):
         data = {}
         data['actions'] = {action: '1'}
         data['fields'] = fields
-        r = self.client.session.post(self.response.url, data=json.dumps(data))
-        return State(self.client, r)
+        return self.client(self.response.url, data=json.dumps(data))
 
     def keys(self):
         return self._obj.keys()
