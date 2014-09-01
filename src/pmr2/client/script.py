@@ -226,7 +226,7 @@ class Cli(object):
                 self.active = False
             except ValueError:
                 print("Couldn't decode json.")
-                print("Status was %d") % self.last_response.status_code
+                # print("Status was %d") % self.last_response.status_code
                 print("Use console to check `self.last_response` for details.")
             except:
                 print(traceback.format_exc())
