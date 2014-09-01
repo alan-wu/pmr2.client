@@ -1,8 +1,7 @@
 Changelog
 =========
 
-0.0-dev (unreleased)
---------------------
+0.1 - 2014-09-01
+----------------
 
-- Package created using templer
-  [Tommy Yu]
+- Initial release.
