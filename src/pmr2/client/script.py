@@ -5,7 +5,7 @@ import code
 import pdb
 import webbrowser
 
-from urllib import quote_plus
+from urllib.parse import quote_plus
 from requests_oauthlib.oauth1_session import TokenRequestDenied
 
 try:
@@ -57,7 +57,7 @@ class Cli(object):
         if isinstance(value, int):
             self._debug = value
 
-        if isinstance(value, basestring):
+        if isinstance(value, (str,bytes)):
             if value.lower() in ('false', 'no', '0',):
                 self._debug = 0
             else:
