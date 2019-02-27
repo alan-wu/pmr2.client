@@ -19,14 +19,14 @@ from pmr2.client import DemoAuthClient
 HOME = os.path.expanduser('~')
 CONFIG_FILENAME = os.path.join(HOME, '.pmr2clirc')
 
-PMR2ROOT = 'http://staging.physiomeproject.org'
+PMR2ROOT = 'http://models.physiomeproject.org'
 CONSUMER_KEY = 'ovYoqjlJLrpCcEWcIFyxtqRS'
 CONSUMER_SECRET = 'fHssEYMWZzgo6JWUBh4l1bhd'
 DEFAULT_SCOPE = quote_plus(
-    'http://staging.physiomeproject.org/oauth_scope/collection,'
-    'http://staging.physiomeproject.org/oauth_scope/search,'
-    'http://staging.physiomeproject.org/oauth_scope/workspace_tempauth,'
-    'http://staging.physiomeproject.org/oauth_scope/workspace_full'
+    'http://models.physiomeproject.org/oauth_scope/collection,'
+    'http://models.physiomeproject.org/oauth_scope/search,'
+    'http://models.physiomeproject.org/oauth_scope/workspace_tempauth,'
+    'http://models.physiomeproject.org/oauth_scope/workspace_full'
 )
 
 

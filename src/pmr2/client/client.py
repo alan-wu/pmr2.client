@@ -107,7 +107,10 @@ class State(object):
     def __init__(self, client, response):
         self.client = client
         self.response = response
-        self._obj = response.json()
+        try:
+            self._obj = response.json()
+        except:
+            self._obj = None
 
     def get(self, key):
         target = self._obj.get(key, {}).get('target')
